@@ -19,6 +19,7 @@
 
 import RustWorker from "../build/index.js";
 import { base64UrlDecode, handleAzureUpload, handleDownload } from "./attachments.js";
+import { buildIconRedirectResponse, parseIconPath } from "./icons.mjs";
 
 function getBearerToken(request) {
   const auth = request.headers.get("Authorization") || request.headers.get("authorization");
@@ -149,6 +150,24 @@ function parseDownloadPath(path) {
   return null;
 }
 
+function createNoStoreResponse(status = 404) {
+  return new Response(null, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+async function handleIconRequest(request, env, url) {
+  const parsed = parseIconPath(url.pathname);
+  if (!parsed) {
+    return createNoStoreResponse(404);
+  }
+
+  return buildIconRedirectResponse(parsed.domain);
+}
+
 // Main fetch handler
 export default {
   async fetch(request, env, ctx) {
@@ -157,6 +176,10 @@ export default {
     url.pathname = normalizePathname(url.pathname);
     request = new Request(url.toString(), request);
     const method = (request.method || "GET").toUpperCase();
+
+    if ((method === "GET" || method === "HEAD") && url.pathname.startsWith("/icons/")) {
+      return handleIconRequest(request, env, url);
+    }
 
     // Optional: route selected CPU-heavy endpoints to Durable Objects.
     // This keeps the main Worker on a low-CPU path while allowing heavy work to complete.

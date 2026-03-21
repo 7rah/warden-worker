@@ -17,6 +17,7 @@ Warden aims to solve this problem by leveraging the Cloudflare Workers ecosystem
 * **Core Vault Functionality:** Create, read, update, and delete ciphers and folders.
 * **File Attachments:** Optional Cloudflare KV or R2 storage for attachments.
 * **TOTP Support:** Store and generate Time-based One-Time Passwords.
+* **Website Icons:** Vaultwarden-compatible icon redirect route.
 * **Bitwarden Compatible:** Works with official Bitwarden clients.
 * **Free to Host:** Runs on Cloudflare's free tier.
 * **Low Maintenance:** Deploy it once and forget about it.
@@ -81,6 +82,7 @@ The frontend is bundled with the Worker using [Cloudflare Workers Static Assets]
 **How it works:**
 - Static files (HTML, CSS, JS) are served directly by Cloudflare's edge network.
 - API requests (`/api/*`, `/identity/*`) are routed to the Rust Worker.
+- Icon requests (`/icons/*`) are handled by the Worker and redirected to Google's favicon service.
 - No separate Pages deployment or domain configuration needed.
 
 **UI overrides (optional):**
@@ -201,7 +203,6 @@ Configure environment variables in `wrangler.toml` under `[vars]`, or set them v
   - Example: `1048576` for 1GB.
 * **`ATTACHMENT_TTL_SECS`** (Optional, Default: `300`, Minimum: `60`): 
   - TTL for attachment upload/download URLs.
-
 ### Scheduled Tasks (Cron)
 
 The worker runs a scheduled task to clean up soft-deleted items. By default, it runs daily at 03:00 UTC (`wrangler.toml` `[triggers]` cron `"0 3 * * *"`). Adjust as needed; see [Cloudflare Cron Triggers documentation](https://developers.cloudflare.com/workers/configuration/cron-triggers/) for cron expression syntax.
