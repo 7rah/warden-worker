@@ -20,6 +20,7 @@ Warden aims to solve this problem by leveraging the Cloudflare Workers ecosystem
 * **Device Management:** View and revoke active sessions.
 * **Live Sync & Push Notifications:** Real-time vault updates via WebSocket and mobile push.
 * **TOTP Support:** Store and generate Time-based One-Time Passwords.
+* **Website Icons:** Vaultwarden-compatible icon redirect route.
 * **Bitwarden Compatible:** Works with official Bitwarden clients.
 * **Free to Host:** Runs on Cloudflare's free tier.
 * **Low Maintenance:** Deploy it once and forget about it.
@@ -91,6 +92,7 @@ The frontend is bundled with the Worker using [Cloudflare Workers Static Assets]
 **How it works:**
 - Static files (HTML, CSS, JS) are served directly by Cloudflare's edge network.
 - API requests (`/api/*`, `/identity/*`) are routed to the Rust Worker.
+- Icon requests (`/icons/*`) are handled by the Worker and redirected to Google's favicon service.
 - No separate Pages deployment or domain configuration needed.
 
 **UI overrides (optional):**

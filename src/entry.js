@@ -8,6 +8,7 @@
  */
 
 import RustWorker from "../build/index.js";
+import { handleIconRequest } from "./icons.mjs";
 
 function base64UrlDecode(str) {
   let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -127,6 +128,8 @@ export default {
     url.pathname = normalizePathname(url.pathname);
     request = new Request(url.toString(), request);
     const method = (request.method || "GET").toUpperCase();
+
+    if (url.pathname.startsWith("/icons/")) return handleIconRequest(method, url.pathname);
 
     if (
       env.NOTIFY_DO &&
