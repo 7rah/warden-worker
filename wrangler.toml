@@ -2,7 +2,7 @@ name = "warden-worker"
 main = "src/entry.js"
 compatibility_date = "2025-09-19"
 keep_vars = true
-workers_dev = false
+workers_dev = true
 preview_urls = false
 
 [durable_objects]
